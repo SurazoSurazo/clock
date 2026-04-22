@@ -11,7 +11,7 @@
 
 .result-card {
   margin: 0 20px;
-  width: 360px;
+  width: 420px;
   border-radius: 3px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, .15);
 }
@@ -31,14 +31,29 @@
 
 .result-card__body {
   display: flex;
-  justify-content: space-between;
-  padding: 15px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 25px;
 }
 
-.result-card__city,
+.result-card__city {
+  margin: 0 0 12px 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
 .result-card__time {
-  margin: 0;
+  margin: 0 0 16px 0;
+  font-size: 32px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.result-card__body p {
+  margin: 8px 0;
   font-size: 18px;
+  color: #555;
 }
 
 .exchange-rate {
@@ -52,4 +67,18 @@
   border-left: 6px solid #4a90e2;
   border-radius: 6px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.checklist {
+  margin-top: 20px;
+}
+
+.checklist ul {
+  display: block;
+  padding: 0;
+  margin: 0;
+}
+
+.checklist li {
+  display: block;
 }
