@@ -71,7 +71,10 @@ $temperatureCity = getTemperature($city);
           <ul id="checklist-items"></ul>
 
           <input type="text" id="new-item" placeholder="項目を入力">
-          <button onclick="addItem()">追加</button>
+          <div class="checklist__actions">
+            <button onclick="addItem()">追加</button>
+            <button onclick="deleteAllItems()">まとめて削除</button>
+          </div>
         </div>
       </div>
 
@@ -83,6 +86,9 @@ $temperatureCity = getTemperature($city);
           <div class="result-card__body">
             <p class="result-card__city">
               <?php echo $tokyo['name'] ?>
+            </p>
+            <p>
+              日付：<?php echo $tokyo['date'] ?>
             </p>
             <p class="result-card__time">
               <?php echo $tokyo['time'] ?>
@@ -104,6 +110,9 @@ $temperatureCity = getTemperature($city);
           <div class="result-card__body">
             <p class="result-card__city">
               <?php echo $comparison['name'] ?>
+            </p>
+            <p>
+              日付：<?php echo $comparison['date'] ?>
             </p>
             <p class="result-card__time">
               <?php echo $comparison['time'] ?>
@@ -162,6 +171,12 @@ $temperatureCity = getTemperature($city);
 
     function removeItem(index) {
       items.splice(index, 1);
+      render();
+    }
+
+    function deleteAllItems() {
+      items = [];
+      localStorage.setItem('checklist', JSON.stringify(items));
       render();
     }
 
