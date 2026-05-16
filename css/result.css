@@ -33,26 +33,28 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 10px;
   text-align: center;
   padding: 25px;
 }
 
-.result-card__city {
-  margin: 0 0 12px 0;
+.result-card__body .result-card__city {
+  margin: 0;
   font-size: 24px;
   font-weight: bold;
 }
 
-.result-card__time {
-  margin: 0 0 16px 0;
-  font-size: 32px;
-  font-weight: bold;
+.result-card__body .result-card__time {
+  margin: 0;
+  font-size: 18px;
+  font-weight: normal;
   color: #2c3e50;
 }
 
 .result-card__body p {
-  margin: 8px 0;
+  margin: 0;
   font-size: 18px;
+  font-weight: normal;
   color: #555;
 }
 
@@ -69,16 +71,82 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
+.checklists {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
 .checklist {
-  margin-top: 20px;
+  margin: 0;
+  padding: 20px;
+  width: 360px;
+  text-align: center;
+  background: #f5f7fa;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.checklist h2 {
+  margin: 0 0 16px;
+  font-size: 22px;
+}
+
+.checklist input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.checklist__actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.checklist__actions button,
+.checklist li button {
+  width: auto;
+  min-width: 80px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  background: #4a90e2;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.checklist__actions button:last-child,
+.checklist li button {
+  background: #e74c3c;
 }
 
 .checklist ul {
   display: block;
   padding: 0;
-  margin: 0;
+  margin: 0 0 16px;
 }
 
 .checklist li {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  text-align: left;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.checklist li span {
+  flex: 1;
+  text-align: center;
 }

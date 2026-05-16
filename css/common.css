@@ -2,13 +2,13 @@
   background: #000;
 }
 
-.header_inner {
+.header__inner {
   margin: 0 auto;
   padding: 20px 15px;
   max-width: 1230px;
 }
 
-.header_logo {
+.header__logo {
   color: #fff;
   text-decoration: none;
   font-weight: bold;

@@ -65,14 +65,6 @@ $temperatureCity = getTemperature($city);
 
       <div class="exchange-rate">
         1<?php echo $currency; ?> = <?php echo $rate; ?> 円
-        <div class="checklist">
-          <h2>チェックリスト</h2>
-
-          <ul id="checklist-items"></ul>
-
-          <input type="text" id="new-item" placeholder="項目を入力">
-          <button onclick="addItem()">追加</button>
-        </div>
       </div>
 
       <div class="result-cards">
@@ -83,6 +75,9 @@ $temperatureCity = getTemperature($city);
           <div class="result-card__body">
             <p class="result-card__city">
               <?php echo $tokyo['name'] ?>
+            </p>
+            <p>
+              日付：<?php echo $tokyo['date'] ?>
             </p>
             <p class="result-card__time">
               <?php echo $tokyo['time'] ?>
@@ -105,6 +100,9 @@ $temperatureCity = getTemperature($city);
             <p class="result-card__city">
               <?php echo $comparison['name'] ?>
             </p>
+            <p>
+              日付：<?php echo $comparison['date'] ?>
+            </p>
             <p class="result-card__time">
               <?php echo $comparison['time'] ?>
             </p>
@@ -119,53 +117,139 @@ $temperatureCity = getTemperature($city);
         </div>
       </div>
 
+      <div class="checklists">
+        <div class="checklist" data-list-key="packing">
+          <h2>持ち物リスト</h2>
+
+          <ul class="checklist-items"></ul>
+
+          <input type="text" class="new-item" placeholder="項目を入力">
+          <div class="checklist__actions">
+            <button onclick="addItem('packing')">追加</button>
+            <button onclick="deleteAllItems('packing')">まとめて削除</button>
+          </div>
+        </div>
+
+        <div class="checklist" data-list-key="sightseeing">
+          <h2>観光名所</h2>
+
+          <ul class="checklist-items"></ul>
+
+          <input type="text" class="new-item" placeholder="項目を入力">
+          <div class="checklist__actions">
+            <button onclick="addItem('sightseeing')">追加</button>
+            <button onclick="deleteAllItems('sightseeing')">まとめて削除</button>
+          </div>
+        </div>
+
+        <div class="checklist" data-list-key="food">
+          <h2>食べたいものリスト</h2>
+
+          <ul class="checklist-items"></ul>
+
+          <input type="text" class="new-item" placeholder="項目を入力">
+          <div class="checklist__actions">
+            <button onclick="addItem('food')">追加</button>
+            <button onclick="deleteAllItems('food')">まとめて削除</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
   <script>
-    let items = JSON.parse(localStorage.getItem('checklist') || '[]');
+    const selectedCity = <?php echo json_encode($city, JSON_UNESCAPED_UNICODE); ?>;
+    const listKeys = ['packing', 'sightseeing', 'food'];
+    const items = {};
 
-    function render() {
-      const ul = document.getElementById('checklist-items');
+    function getStorageKey(listKey) {
+      return `checklist-${selectedCity}-${listKey}`;
+    }
+
+    listKeys.forEach((listKey) => {
+      items[listKey] = JSON.parse(localStorage.getItem(getStorageKey(listKey)) || '[]');
+    });
+
+    function render(listKey) {
+      const checklist = document.querySelector(`[data-list-key="${listKey}"]`);
+      const ul = checklist.querySelector('.checklist-items');
       ul.innerHTML = '';
 
-      items.forEach((item, index) => {
+      items[listKey].forEach((item, index) => {
         const li = document.createElement('li');
+        li.addEventListener('click', function() {
+          toggle(listKey, index);
+        });
 
-        li.innerHTML = `
-      <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggle(${index})">
-      ${item.text}
-      <button onclick="removeItem(${index})">削除</button>
-    `;
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = item.checked;
+        checkbox.addEventListener('click', function(event) {
+          event.stopPropagation();
+          toggle(listKey, index);
+        });
+
+        const text = document.createElement('span');
+        text.textContent = item.text;
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = '削除';
+        deleteButton.addEventListener('click', function(event) {
+          event.stopPropagation();
+          removeItem(listKey, index);
+        });
+
+        li.appendChild(checkbox);
+        li.appendChild(text);
+        li.appendChild(deleteButton);
 
         ul.appendChild(li);
       });
 
-      localStorage.setItem('checklist', JSON.stringify(items));
+      localStorage.setItem(getStorageKey(listKey), JSON.stringify(items[listKey]));
     }
 
-    function addItem() {
-      const input = document.getElementById('new-item');
+    function addItem(listKey) {
+      const checklist = document.querySelector(`[data-list-key="${listKey}"]`);
+      const input = checklist.querySelector('.new-item');
       if (input.value.trim() === '') return;
 
-      items.push({
+      items[listKey].push({
         text: input.value,
         checked: false
       });
       input.value = '';
-      render();
+      render(listKey);
     }
 
-    function toggle(index) {
-      items[index].checked = !items[index].checked;
-      render();
+    function toggle(listKey, index) {
+      items[listKey][index].checked = !items[listKey][index].checked;
+      render(listKey);
     }
 
-    function removeItem(index) {
-      items.splice(index, 1);
-      render();
+    function removeItem(listKey, index) {
+      items[listKey].splice(index, 1);
+      render(listKey);
     }
 
-    render();
+    function deleteAllItems(listKey) {
+      items[listKey] = [];
+      localStorage.setItem(getStorageKey(listKey), JSON.stringify(items[listKey]));
+      render(listKey);
+    }
+
+    document.querySelectorAll('.checklist').forEach((checklist) => {
+      const listKey = checklist.dataset.listKey;
+      const input = checklist.querySelector('.new-item');
+
+      input.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' && !event.isComposing) {
+          addItem(listKey);
+        }
+      });
+    });
+
+    listKeys.forEach(render);
   </script>
 </body>
 
